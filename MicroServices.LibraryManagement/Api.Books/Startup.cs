@@ -1,4 +1,5 @@
 ﻿using Api.Books.Services;
+using Common;
 using Microsoft.EntityFrameworkCore;
 using Repository.Books;
 using Repository.Books.DbContext;
@@ -15,6 +16,8 @@ namespace Api.Books
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddConsulConfig(Configuration);
+            
             var connectionString = Configuration.GetConnectionString("BookDbConnection");
             services.AddDbContext<BookDbContext>(opts => opts.UseSqlServer(connectionString));
 
@@ -30,7 +33,8 @@ namespace Api.Books
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseConsul(Configuration);
+            // providing hardcoded portNumber for registration in Consul
+            app.UseConsul(Configuration, "localhost", 3001);
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
             // Configure the HTTP request pipeline.

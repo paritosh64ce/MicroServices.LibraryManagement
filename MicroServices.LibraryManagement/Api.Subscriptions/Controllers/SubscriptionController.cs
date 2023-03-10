@@ -14,8 +14,8 @@ namespace Api.Subscriptions.Controllers
             this.service = service;
         }
 
-        [HttpGet("{subscriberName}")]
-        public async Task<IActionResult> Get(string? subscriberName)
+        [HttpGet("{subscriberName?}")]
+        public async Task<IActionResult> Get(string? subscriberName = null)
         {
             var subscriptions = await service.GetSubscriptionsAsync(subscriberName);
             return Ok(subscriptions);

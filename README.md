@@ -2,13 +2,13 @@
  Simple library management solution using microservices with .Net
 
 
-- ### Book microservice @ http://localhost:5003
-- ### Subscription microservice @ http://localhost:5002
+- ### Book microservice @ http://localhost:3001
+- ### Subscription microservice @ http://localhost:5001
 
-- ### Api Gateway @ http://localhost:5000
+- ### Api Gateway @ http://localhost:8001
 
 ---
-- http://localhost:5000/gateway/book/1 ==> http://localhost:5003/api/book/1
+- http://localhost:8001/gateway/book/1 ==> http://localhost:3001/api/book/1
     ```
     {
         "id": 1,
@@ -18,7 +18,7 @@
         "totalCopies": 5
     }
     ```
-- http://localhost:5000/gateway/sub/Paritosh ==> http://localhost:5002/api/subscription/Paritosh
+- http://localhost:8001/gateway/sub/Paritosh ==> http://localhost:5001/api/subscription/Paritosh
     ```
     [
         {

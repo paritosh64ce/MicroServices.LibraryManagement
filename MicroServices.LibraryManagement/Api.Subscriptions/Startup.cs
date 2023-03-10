@@ -33,7 +33,8 @@ namespace Api.Books
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseConsul(Configuration);
+            // providing hardcoded portNumber for registration in Consul
+            app.UseConsul(Configuration, "localhost", 5001);
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
             // Configure the HTTP request pipeline.

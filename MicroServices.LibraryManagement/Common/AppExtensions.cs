@@ -23,34 +23,35 @@ namespace Common
             return services;
         }
 
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration,
+            string hostName, int portNumber)
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
             var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger("AppExtensions");
             var lifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
 
-            if (!(app.Properties["server.Features"] is FeatureCollection features))
-            {
-                return app;
-            }
+            //if (!(app.Properties["server.Features"] is FeatureCollection features))
+            //{
+            //    return app;
+            //}
 
-            var addresses = features.Get<IServerAddressesFeature>();
-            var address = addresses.Addresses.First();
+            //var addresses = features.Get<IServerAddressesFeature>();
+            //var address = addresses.Addresses.First();
 
-            Console.WriteLine($"address={address}");
+            //Console.WriteLine($"address={address}");
 
             //var serviceName = configuration.GetValue<string>("ConsulConfig:ServiceName");
             //var serviceId = configuration.GetValue<string>("ConsulConfig:ServiceId");
             var serviceName = configuration["ConsulConfig:ServiceName"];
             var serviceId = configuration["ConsulConfig:ServiceId"];
-            var uri = new Uri(address);
+            //var uri = new Uri(address);
 
             var registration = new AgentServiceRegistration()
             {
                 ID = serviceId,
                 Name = serviceName,
-                Address = $"{uri.Host}",
-                Port = uri.Port
+                Address = hostName, // $"{uri.Host}",
+                Port = portNumber // uri.Port
             };
 
             logger.LogInformation("Registering with Consul");

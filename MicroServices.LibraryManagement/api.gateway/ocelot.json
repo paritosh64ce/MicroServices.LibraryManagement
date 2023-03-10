@@ -1,31 +1,29 @@
 {
   "Routes": [
     {
+      "UseServiceDiscovery": true,
       "DownstreamPathTemplate": "/api/book/{anything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5003
-        }
-      ],
+      "ServiceName": "bookService",
       "UpstreamPathTemplate": "/gateway/book/{anything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "ReRoutesCaseSensitive": false
     },
     {
+      "UseServiceDiscovery": true,
       "DownstreamPathTemplate": "/api/subscription/{anything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5002
-        }
-      ],
+      "ServiceName": "subscriptionService",
       "UpstreamPathTemplate": "/gateway/sub/{anything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "ReRoutesCaseSensitive": false
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000"
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    }
   }
 }
