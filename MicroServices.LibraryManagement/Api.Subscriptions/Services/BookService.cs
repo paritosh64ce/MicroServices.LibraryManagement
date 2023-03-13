@@ -13,13 +13,13 @@ namespace Api.Subscriptions.Services
         }
         public async Task<Book> GetBook(int id)
         {
-            var response = await httpClient.GetAsync($"/book/{id}");
+            var response = await httpClient.GetAsync($"/api/book/{id}");
             return await response.ReadContentAs<Book>();
         }
 
         public async Task SubscribeBook(int id)
         {
-            await httpClient.PostAsync($"/book/subscribe/{id}", null);
+            await httpClient.PostAsync($"/api/book/subscribe/{id}", null);
         }
 
         public Task UnsubscribeBook(int id)

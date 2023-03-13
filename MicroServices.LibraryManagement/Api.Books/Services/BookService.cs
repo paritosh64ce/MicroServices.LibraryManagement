@@ -26,7 +26,7 @@ namespace Api.Books.Services
             var book = await repository.GetBookAsync(id);
             if (book != null)
             {
-                repository.SubscribeBook(book);
+                await repository.SubscribeBook(book);
             }
             else
             {
@@ -39,7 +39,7 @@ namespace Api.Books.Services
             var book = await repository.GetBookAsync(id);
             if (book != null)
             {
-                repository.UnsubscribeBook(book);
+                await repository.UnsubscribeBook(book);
             }
             else
             {

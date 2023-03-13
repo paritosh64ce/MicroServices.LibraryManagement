@@ -12,18 +12,18 @@ namespace Repository.Subscriptions.Domain
         [Required]
         [Column("SUBSCRIBER_NAME")]
         [MaxLength(500)]
-        public string SubscriberName { get; private set; }
+        public string SubscriberName { get; set; }
 
         [Required]
         [Column("DATE_SUBSCRIBED")]
-        public DateTime DateSubscribed { get; private set; }
+        public DateTime DateSubscribed { get; set; }
 
         [Column("DATE_RETURNED")]
         public DateTime? DateReturned { get; set; }
 
         [Required]
         [Column("BOOK_ID")]
-        public int BookId { get; private set; }
+        public int BookId { get; set; }
 
         public Subscription()
         {
