@@ -9,9 +9,11 @@ namespace Api.Subscriptions.Controllers
     public class SubscriptionController : ControllerBase
     {
         private readonly ISubscriptionService service;
-        public SubscriptionController(ISubscriptionService service)
+        private readonly IBookService bookService;
+        public SubscriptionController(ISubscriptionService service, IBookService bookService)
         {
             this.service = service;
+            this.bookService = bookService;
         }
 
         [HttpGet("{subscriberName?}")]
@@ -24,8 +26,18 @@ namespace Api.Subscriptions.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Subscription subscription)
         {
-            var newSubscription = await service.AddSubscriptionAsync(subscription);
-            return new CreatedResult("", newSubscription);
+            var book = await bookService.GetBook(subscription.BookId);
+
+            if (book == null)
+            {
+                return NotFound($"Book with id {subscription.BookId} not found");
+            }
+            else
+            {
+                await bookService.SubscribeBook(subscription.BookId);
+                var newSubscription = await service.AddSubscriptionAsync(subscription);
+                return new CreatedResult("", newSubscription);
+            }            
         }
     }
 }

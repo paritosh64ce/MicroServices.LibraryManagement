@@ -13,17 +13,25 @@ namespace Api.Books.Controllers
             this.service = service;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBook(int id)
+        [HttpGet("{id?}")]
+        public async Task<IActionResult> GetBook(int? id = null)
         {
-            var book = await service.GetBook(id);
-            if (book != null)
+            if (id == null)
             {
-                return new OkObjectResult(book);
+                var books = await service.GetBooks();
+                return Ok(books);
             }
             else
             {
-                return new NotFoundObjectResult($"Book having id - {id} not found.");
+                var book = await service.GetBook((int)id);
+                if (book != null)
+                {
+                    return new OkObjectResult(book);
+                }
+                else
+                {
+                    return new NotFoundObjectResult($"Book having id - {id} not found.");
+                }
             }
         }
 

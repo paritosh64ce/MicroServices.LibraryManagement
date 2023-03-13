@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository.Books.DbContext;
 using Repository.Books.Domain;
-using System.Linq;
 
 namespace Repository.Books
 {
@@ -24,13 +23,13 @@ namespace Repository.Books
             return await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async void SubscribeBook(Book book)
+        public async Task SubscribeBook(Book book)
         {
             book.Subscribe();
             await _dbContext.SaveChangesAsync();
         }
 
-        public async void UnsubscribeBook(Book book)
+        public async Task UnsubscribeBook(Book book)
         {
             book.Unsubscribe();
             await _dbContext.SaveChangesAsync();

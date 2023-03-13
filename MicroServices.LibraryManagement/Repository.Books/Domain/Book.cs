@@ -34,7 +34,7 @@ namespace Repository.Books.Domain
         [Column("TOTAL_COPIES")]
         public int TotalCopies { get; set; }
 
-        internal Book() { }
+        public Book() { }
 
         public void Subscribe()
         {

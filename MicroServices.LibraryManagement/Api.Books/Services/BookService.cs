@@ -11,6 +11,11 @@ namespace Api.Books.Services
             this.repository = repository;
         }
 
+        public async Task<IList<Book>> GetBooks()
+        {
+            return await repository.GetAllAsync();
+        }
+
         public async Task<Book?> GetBook(int id)
         {
             return await repository.GetBookAsync(id);

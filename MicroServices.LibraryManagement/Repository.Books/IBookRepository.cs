@@ -6,8 +6,8 @@ namespace Repository.Books
     {
         Task<List<Book>> GetAllAsync();
         Task<Book?> GetBookAsync(int id);
-        void SubscribeBook(Book book);
-        void UnsubscribeBook(Book book);
+        Task SubscribeBook(Book book);
+        Task UnsubscribeBook(Book book);
 
     }
 }

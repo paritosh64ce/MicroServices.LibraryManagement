@@ -25,6 +25,10 @@ namespace Repository.Subscriptions.Domain
         [Column("BOOK_ID")]
         public int BookId { get; private set; }
 
+        public Subscription()
+        {
+
+        }
         internal Subscription(string subscriberName, int bookId) 
         {
             SubscriberName = subscriberName;
@@ -32,7 +36,7 @@ namespace Repository.Subscriptions.Domain
             DateSubscribed = DateTime.UtcNow;
         }
 
-        void EndSubscription()
+        public void EndSubscription()
         {
             DateReturned = DateTime.UtcNow;
         }
