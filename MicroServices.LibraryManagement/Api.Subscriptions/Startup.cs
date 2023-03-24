@@ -27,6 +27,7 @@ namespace Api.Books
             services.AddScoped<ISubscriptionService, SubscriptionService>();
 
             services.AddHttpClient<IBookService, BookService>(c =>
+            // TODO: remove hard-coding, get it from Consul registry instead
             c.BaseAddress = new Uri(Configuration["BookServiceUrl"]))
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
@@ -40,8 +41,7 @@ namespace Api.Books
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // providing hardcoded portNumber for registration in Consul
-            app.UseConsul(Configuration, "localhost", 5001);
+            app.UseConsul(Configuration);
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
             // Configure the HTTP request pipeline.

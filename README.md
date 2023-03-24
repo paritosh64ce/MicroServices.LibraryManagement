@@ -56,12 +56,13 @@
 1. Microservice communication - Calling and validating data from `BookService` while adding `Subscription`
 1. Api gateway implemented with `Ocelot`
 1. Microservice communication with Retry and Circuit breaker
+1. Service discrovery with `Consul` (fully dynamic), `Ocelot`
 
 ---
 ### TODO
 
-1. Service discrovery with `Consul` (fully dynamic)
 1. Logging
+1. remove hard-coded BookService from SubscriptionService appsettings.json; get it from Consul registry instead
 
 ---
 
@@ -70,3 +71,18 @@
 - start `consul.exe agent --dev`
 - It will start `Consul` at http://localhost:8500
 - Register from Startup files of microservices
+
+### Start another instances of service from command prompt
+- dotnet Api.Books.dll --urls http://localhost:<PORT> (usually 3001, 3002, etc)
+- dotnet Api.Subscriptions.dll --urls http://localhost:<PORT> (usually 5001, 5002, etc)
+- dotnet api.gateway.dll --urls http://localhost:<PORT>
+
+> We also need to update `ConsulConfig.ServiceAddress` in `appsettings.json` so that the server gets registered with `Consul` with port number (for Book & Sub service)
+> `--urls` param is used for bootstrapping the service with appropriate URL
+> Hence, after starting one instance of a service, we need to update `appsettings.json` with new `ServiceAddress` before starting another instance.
+
+- ServiceId is generated with : {serviceName}_{uri.Host}:{uri.Port}
+
+### References
+- https://swimburger.net/blog/dotnet/how-to-get-aspdotnet-core-server-urls#how-to-get-aspnet-core-server-urls-in-programcs-with-minimal-apis
+- https://www.michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul

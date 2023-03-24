@@ -16,15 +16,12 @@ namespace Common
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
                 var address = configuration["ConsulConfig:Host"];
-                // var address = configuration.GetValue<string>("ConsulConfig:Host");
                 consulConfig.Address = new Uri(address);
             }));
-
             return services;
         }
 
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration,
-            string hostName, int portNumber)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, IConfiguration configuration)
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
             var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger("AppExtensions");
@@ -37,30 +34,29 @@ namespace Common
 
             //var addresses = features.Get<IServerAddressesFeature>();
             //var address = addresses.Addresses.First();
+            // above code works when we do `await app.StartAsync();` from Program.cs, but api doesn't accept any request in that case
+            // hence, have to get `ServiceAddress` from appsettings.json
 
-            //Console.WriteLine($"address={address}");
-
-            //var serviceName = configuration.GetValue<string>("ConsulConfig:ServiceName");
-            //var serviceId = configuration.GetValue<string>("ConsulConfig:ServiceId");
             var serviceName = configuration["ConsulConfig:ServiceName"];
-            var serviceId = configuration["ConsulConfig:ServiceId"];
-            //var uri = new Uri(address);
+
+            var uri = new Uri(configuration["ConsulConfig:ServiceAddress"]);
+            var serviceId = $"{serviceName}_{uri.Host}:{uri.Port}";
 
             var registration = new AgentServiceRegistration()
             {
                 ID = serviceId,
                 Name = serviceName,
-                Address = hostName, // $"{uri.Host}",
-                Port = portNumber // uri.Port
+                Address = uri.Host,
+                Port = uri.Port
             };
-
-            logger.LogInformation("Registering with Consul");
+            
+            logger.LogWarning($"Registering with Consul with address: {configuration["ConsulConfig:ServiceAddress"]}");
             consulClient.Agent.ServiceDeregister(registration.ID).ConfigureAwait(true);
             consulClient.Agent.ServiceRegister(registration).ConfigureAwait(true);
 
             lifetime.ApplicationStopping.Register(() =>
             {
-                logger.LogInformation("Unregistering from Consul");
+                logger.LogWarning("Unregistering from Consul");
                 consulClient.Agent.ServiceDeregister(registration.ID).ConfigureAwait(true);
             });
 
