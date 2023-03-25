@@ -60,6 +60,7 @@
 1. Microservice communication with Retry and Circuit breaker
 1. Service discrovery with `Consul` (fully dynamic), `Ocelot`
 1. Removed hard-coded BookServiceUrl from SubscriptionService appsettings.json; get it from Consul registry instead
+1. Added docker-compose for bootstrapping `Consul`, `Kibana` and `ElasticSearch`
 
 ---
 ### TODO
@@ -73,6 +74,12 @@
 - start `consul.exe agent --dev`
 - It will start `Consul` at http://localhost:8500
 - Register from Startup files of microservices
+
+- Alternatively, just do `docker-compose build`, `docker-compose up` to start `Consul`, `ElasticSearch` and `Kibana` all at once
+  - The services may take some time initially to start. Validate below URLs.
+  - Consule: http://localhost:8500
+  - ElasticSearch: http://localhost:9200
+  - Kibana: http://localhost:5601
 
 ---
 ---
