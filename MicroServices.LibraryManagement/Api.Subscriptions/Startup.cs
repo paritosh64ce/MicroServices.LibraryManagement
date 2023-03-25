@@ -26,9 +26,9 @@ namespace Api.Books
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
 
-            services.AddHttpClient<IBookService, BookService>(c =>
-            // TODO: remove hard-coding, get it from Consul registry instead
-            c.BaseAddress = new Uri(Configuration["BookServiceUrl"]))
+            services.AddHttpClient<IBookService, BookService>()
+            // c => c.BaseAddress = new Uri(Configuration["BookServiceUrl"]))
+            // removed hard-coding, now its being selected from Consul registry instead while consuming BookService
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 

@@ -40,7 +40,7 @@ namespace Repository.Books.Domain
         {
             if (AvailableCopies == 0)
             {
-                throw new Exception("No copied left to subscribe");
+                throw new Exception("No copies left to subscribe");
             }
             AvailableCopies--;
         }

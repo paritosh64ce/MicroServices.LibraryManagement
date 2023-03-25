@@ -50,6 +50,8 @@
     }
     ```
 ---
+---
+
 ### Done
 
 1. Two microservices with GET, POST methods fetching data from SQL Server (above) implemented
@@ -57,12 +59,12 @@
 1. Api gateway implemented with `Ocelot`
 1. Microservice communication with Retry and Circuit breaker
 1. Service discrovery with `Consul` (fully dynamic), `Ocelot`
+1. Removed hard-coded BookServiceUrl from SubscriptionService appsettings.json; get it from Consul registry instead
 
 ---
 ### TODO
 
 1. Logging
-1. remove hard-coded BookService from SubscriptionService appsettings.json; get it from Consul registry instead
 
 ---
 
@@ -72,17 +74,38 @@
 - It will start `Consul` at http://localhost:8500
 - Register from Startup files of microservices
 
-### Start another instances of service from command prompt
-- dotnet Api.Books.dll --urls http://localhost:<PORT> (usually 3001, 3002, etc)
-- dotnet Api.Subscriptions.dll --urls http://localhost:<PORT> (usually 5001, 5002, etc)
-- dotnet api.gateway.dll --urls http://localhost:<PORT>
+---
+---
 
-> We also need to update `ConsulConfig.ServiceAddress` in `appsettings.json` so that the server gets registered with `Consul` with port number (for Book & Sub service)
-> `--urls` param is used for bootstrapping the service with appropriate URL
-> Hence, after starting one instance of a service, we need to update `appsettings.json` with new `ServiceAddress` before starting another instance.
+## Validating Service Discovery
 
-- ServiceId is generated with : {serviceName}_{uri.Host}:{uri.Port}
+### Start multiple instances of service from command prompt
+- dotnet Api.Books.dll --urls `http://localhost:<PORT>` (usually 3001, 3002, etc)
+- dotnet Api.Subscriptions.dll --urls `http://localhost:<PORT>` (usually 5001, 5002, etc)
+- dotnet api.gateway.dll --urls `http://localhost:<PORT>`
 
-### References
+    > We also need to update `ConsulConfig.ServiceAddress` in `appsettings.json` so that the service gets registered with `Consul` with port number (for Book & Sub service)
+    > `--urls` cli param is used for bootstrapping the service with appropriate URL
+    > Hence, after starting one instance of a service, we need to update `appsettings.json` with new `ServiceAddress` before starting another instance.
+
+    > ServiceId is generated with : {serviceName}_{uri.Host}:{uri.Port}
+
+#### Another alternative to update appconfig.json is to provide the env variable from cli itself
+
+> dotnet Api.Books.dll --urls http://localhost:3001 --ConsulConfig:ServiceAddress=http://localhost:3001
+> dotnet Api.Books.dll --urls http://localhost:3002 --ConsulConfig:ServiceAddress=http://localhost:3002
+
+> dotnet Api.Subscription.dll --urls http://localhost:5001 --ConsulConfig:ServiceAddress=http://localhost:5001
+
+- Now try to consume http://localhost:5001/api/subscription POST request multiple times
+- You'll see that random instance of BookService is being selected (between 3001 & 3002)
+
+> dotnet api.gateway.dll --urls http://localhost:8001
+
+---
+---
+
+## References
 - https://swimburger.net/blog/dotnet/how-to-get-aspdotnet-core-server-urls#how-to-get-aspnet-core-server-urls-in-programcs-with-minimal-apis
 - https://www.michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
+- https://developer.hashicorp.com/consul/docs/services/discovery/dns-dynamic-lookups

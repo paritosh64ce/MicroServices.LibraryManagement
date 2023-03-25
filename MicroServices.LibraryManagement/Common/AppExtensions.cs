@@ -38,16 +38,18 @@ namespace Common
             // hence, have to get `ServiceAddress` from appsettings.json
 
             var serviceName = configuration["ConsulConfig:ServiceName"];
+            var address = configuration["ConsulConfig:ServiceAddress"];
 
-            var uri = new Uri(configuration["ConsulConfig:ServiceAddress"]);
-            var serviceId = $"{serviceName}_{uri.Host}:{uri.Port}";
+            var serviceId = $"{serviceName}_{address}/";
+            var uri = new Uri(address);
 
             var registration = new AgentServiceRegistration()
             {
                 ID = serviceId,
                 Name = serviceName,
                 Address = uri.Host,
-                Port = uri.Port
+                Port = uri.Port,
+                Tags = new string[] { serviceName }
             };
             
             logger.LogWarning($"Registering with Consul with address: {configuration["ConsulConfig:ServiceAddress"]}");
