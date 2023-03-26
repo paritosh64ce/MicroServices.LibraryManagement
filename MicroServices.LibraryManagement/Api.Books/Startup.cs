@@ -3,6 +3,8 @@ using Common;
 using Microsoft.EntityFrameworkCore;
 using Repository.Books;
 using Repository.Books.DbContext;
+using Serilog;
+using System.Reflection;
 
 namespace Api.Books
 {

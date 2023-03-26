@@ -25,7 +25,7 @@ namespace Common
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
             var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger("AppExtensions");
-            var lifetime = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
+            var lifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
 
             //if (!(app.Properties["server.Features"] is FeatureCollection features))
             //{

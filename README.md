@@ -54,18 +54,20 @@
 
 ### Done
 
-1. Two microservices with GET, POST methods fetching data from SQL Server (above) implemented
-1. Microservice communication - Calling and validating data from `BookService` while adding `Subscription`
-1. Api gateway implemented with `Ocelot`
-1. Microservice communication with Retry and Circuit breaker
-1. Service discrovery with `Consul` (fully dynamic), `Ocelot`
-1. Removed hard-coded BookServiceUrl from SubscriptionService appsettings.json; get it from Consul registry instead
-1. Added docker-compose for bootstrapping `Consul`, `Kibana` and `ElasticSearch`
+1. Two microservices with GET, POST methods fetching data from SQL Server (above) implemented.
+1. Microservice communication - Calling and validating data from `BookService` while adding `Subscription`.
+1. Api gateway implemented with `Ocelot`.
+1. Microservice communication with Retry and Circuit breaker using `Polly`.
+1. Service discrovery with `Consul` (fully dynamic), `Ocelot`.
+1. Removed hard-coded BookServiceUrl from SubscriptionService appsettings.json; get it from Consul registry instead.
+1. Added docker-compose for bootstrapping `Consul`, `Kibana` and `ElasticSearch`.
+1. Logging using `Serilog` with `ELK`.
 
 ---
 ### TODO
 
-1. Logging
+1. All above points done!
+1. Microservice instance selection from Gateway in Round-robin fasion (`Ocelot` Cconfiguration).
 
 ---
 
@@ -81,6 +83,9 @@
   - ElasticSearch: http://localhost:9200
   - Kibana: http://localhost:5601
 
+- Fire some requests from Swagger or Postman and validate logs from `Kibana` home > Stack management > Index management
+- Search the logs from `Kibana` home > Dev tools > Console and request `GET books-yyyy-MM/_search`
+
 ---
 ---
 
@@ -89,7 +94,7 @@
 ### Start multiple instances of service from command prompt
 - dotnet Api.Books.dll --urls `http://localhost:<PORT>` (usually 3001, 3002, etc)
 - dotnet Api.Subscriptions.dll --urls `http://localhost:<PORT>` (usually 5001, 5002, etc)
-- dotnet api.gateway.dll --urls `http://localhost:<PORT>`
+- dotnet api.gateway.dll --urls `http://localhost:8001`
 
     > We also need to update `ConsulConfig.ServiceAddress` in `appsettings.json` so that the service gets registered with `Consul` with port number (for Book & Sub service)
     > `--urls` cli param is used for bootstrapping the service with appropriate URL
@@ -109,6 +114,7 @@
 
 > dotnet api.gateway.dll --urls http://localhost:8001
 
+
 ---
 ---
 
@@ -116,3 +122,4 @@
 - https://swimburger.net/blog/dotnet/how-to-get-aspdotnet-core-server-urls#how-to-get-aspnet-core-server-urls-in-programcs-with-minimal-apis
 - https://www.michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul
 - https://developer.hashicorp.com/consul/docs/services/discovery/dns-dynamic-lookups
+- https://www.c-sharpcorner.com/article/logging-with-elasticsearch-kibana-serilog-using-asp-net-core-docker/

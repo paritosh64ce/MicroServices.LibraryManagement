@@ -8,9 +8,11 @@ namespace Api.Books.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService service;
-        public BookController(IBookService service)
+        private readonly ILogger<BookController> logger;
+        public BookController(IBookService service, ILogger<BookController> logger)
         {
             this.service = service;
+            this.logger = logger;
         }
 
         [HttpGet("{id?}")]
@@ -18,6 +20,7 @@ namespace Api.Books.Controllers
         {
             if (id == null)
             {
+                logger.LogWarning("All book information provided");
                 var books = await service.GetBooks();
                 return Ok(books);
             }
@@ -26,10 +29,12 @@ namespace Api.Books.Controllers
                 var book = await service.GetBook((int)id);
                 if (book != null)
                 {
+                    logger.LogTrace($"Book with id:{id} searched.");
                     return new OkObjectResult(book);
                 }
                 else
                 {
+                    logger.LogError($"Book with id:{id} not found.");
                     return new NotFoundObjectResult($"Book having id - {id} not found.");
                 }
             }
@@ -39,6 +44,7 @@ namespace Api.Books.Controllers
         public async Task<IActionResult> SubscribeBook(int id)
         {
             await service.SubscribeBook(id);
+            logger.LogInformation($"Book with id:{id} has been subscribed.");
             return new OkResult();
         }
 
